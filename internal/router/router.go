@@ -66,8 +66,20 @@ func RegisterHealthRoutes(r *Router, handler *handlers.HealthHandler) {
 func RegisterAPIRoutes(r *Router, handler *handlers.APIHandler) {
 	v1 := r.Group("/api/v1")
 	{
-		// TODO: Add API-specific routes here
+		// API info
 		v1.GET("/", handler.GetInfo)
+		
+		// /webhooks routes
+		webhooks := v1.Group("/webhooks")
+		{
+			webhooks.GET("/", handler.ListWebhooks)
+			webhooks.POST("/", handler.RegisterWebhook)
+			webhooks.GET("/:id", handler.GetWebhook)
+			webhooks.PUT("/:id", handler.UpdateWebhook)
+			webhooks.DELETE("/:id", handler.DeleteWebhook)
+			webhooks.POST("/:id/deliver", handler.DeliverWebhook)
+			webhooks.GET("/:id/deliveries", handler.GetDeliveries)
+		}
 	}
 }
 
